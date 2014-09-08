@@ -1,13 +1,16 @@
-FROM centos
+FROM centos:centos6
+MAINTAINER Thomas Clavier <tclavier@azae.net>
+RUN yum -y upgrade
+RUN yum -y install java-1.7.0-openjdk
+RUN yum -y install tomcat6 
 
-RUN yum update -y && yum -y upgrade
-RUN yum install -y sudo
-RUN yum install -y passwd
+ADD http://tomcat.apache.org/tomcat-6.0-doc/appdev/sample/sample.war /var/lib/tomcat6/webapps/
 
-RUN yum install -y java-1.7.0-openjdk-devel.x86_64
+RUN rm -rf /var/log/tomcat6/ ;\
+    rm -rf /usr/share/tomcat6/logs ;\
+    mkdir /var/log/tomcat/ ;\
+    ln -s /var/log/tomcat/ /usr/share/tomcat6/logs 
 
-RUN yum install -y yum-priorities
-RUN rpm -Uvh http://mirrors.dotsrc.org/jpackage/6.0/generic/free/RPMS/jpackage-release-6-3.jpp6.noarch.rpm
-RUN yum install -y tomcat7-webapps
-
-ENTRYPOINT /etc/init.d/tomcat7 start && /bin/bash
+EXPOSE 8080
+VOLUME ["/var/log/tomcat"]
+CMD chown tomcat:tomcat /var/log/tomcat; service tomcat6 start && tail -f /var/log/tomcat/catalina.out
