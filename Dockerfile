@@ -1,6 +1,6 @@
 FROM centos:centos6
-MAINTAINER Thomas Clavier <tclavier@azae.net>
-RUN yum -y upgrade
+
+RUN yum -y upgradee
 RUN yum -y install java-1.7.0-openjdk
 RUN yum -y install tomcat6 
 
